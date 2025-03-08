@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Live Image Updater</title>
+    <style>
+      body { font-family: sans-serif; margin: 16px; }
+      label { display: block; margin-bottom: 4px; }
+      input { width: 100%; margin-bottom: 12px; }
+      button { margin-right: 8px; margin-bottom: 12px; }
+    </style>
+  </head>
+  <body>
+    <div>
+      <label for="url">Image URL:</label>
+      <input type="text" id="url" value="http://localhost:8080/latest.png" />
+    </div>
+    <div>
+      <label for="frequency">Frequency (images per second):</label>
+      <input type="number" id="frequency" min="1" max="10" value="1" />
+    </div>
+    <div>
+      <button id="start">Start</button>
+      <button id="stop">Stop</button>
+      <button id="update">Update Settings</button>
+    </div>
+    <script>
+      const startButton = document.getElementById("start");
+      const stopButton = document.getElementById("stop");
+      const updateButton = document.getElementById("update");
+
+      startButton.onclick = () => {
+        const url = document.getElementById("url").value;
+        const frequency = parseFloat(document.getElementById("frequency").value);
+        parent.postMessage({ pluginMessage: { type: "start", url, frequency } }, "*");
+      };
+
+      stopButton.onclick = () => {
+        parent.postMessage({ pluginMessage: { type: "stop" } }, "*");
+      };
+
+      updateButton.onclick = () => {
+        const url = document.getElementById("url").value;
+        const frequency = parseFloat(document.getElementById("frequency").value);
+        parent.postMessage({ pluginMessage: { type: "updateSettings", url, frequency } }, "*");
+      };
+    </script>
+  </body>
+</html>

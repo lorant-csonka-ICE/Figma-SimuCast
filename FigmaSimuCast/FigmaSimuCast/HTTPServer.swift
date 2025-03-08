@@ -40,8 +40,32 @@ class HTTPServer {
     private func handleConnection(_ connection: NWConnection) {
         connection.start(queue: .main)
         connection.receive(minimumIncompleteLength: 1, maximumLength: 1024) { (data, _, _, error) in
+            guard let data = data,
+                  let requestString = String(data: data, encoding: .utf8) else {
+                connection.cancel()
+                return
+            }
+            
+            // If the incoming request is an OPTIONS request (preflight), respond appropriately.
+            if requestString.hasPrefix("OPTIONS") {
+                var optionsResponse = "HTTP/1.1 204 No Content\r\n"
+                optionsResponse += "Access-Control-Allow-Origin: *\r\n"
+                optionsResponse += "Access-Control-Allow-Methods: GET, OPTIONS\r\n"
+                optionsResponse += "Access-Control-Allow-Headers: Content-Type\r\n"
+                optionsResponse += "Access-Control-Allow-Private-Network: true\r\n"
+                optionsResponse += "\r\n"
+                let responseData = Data(optionsResponse.utf8)
+                connection.send(content: responseData, completion: .contentProcessed({ _ in
+                    connection.cancel()
+                }))
+                return
+            }
+            
+            // Handle a normal GET request.
             let imageData = self.imageDataProvider() ?? Data()
             var responseHeaders = "HTTP/1.1 200 OK\r\n"
+            responseHeaders += "Access-Control-Allow-Origin: *\r\n"
+            responseHeaders += "Access-Control-Allow-Private-Network: true\r\n"
             if !imageData.isEmpty {
                 responseHeaders += "Content-Type: image/png\r\n"
                 responseHeaders += "Content-Length: \(imageData.count)\r\n"
@@ -53,7 +77,7 @@ class HTTPServer {
             var response = Data(responseHeaders.utf8)
             response.append(imageData)
             
-            connection.send(content: response, completion: .contentProcessed({ sendError in
+            connection.send(content: response, completion: .contentProcessed({ _ in
                 connection.cancel()
             }))
         }
