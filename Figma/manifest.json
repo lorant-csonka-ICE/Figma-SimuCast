@@ -1,6 +1,6 @@
 {
-    "name": "Live Image Updater",
-    "id": "com.example.liveimageupdater",
+    "name": "Figma SimuCast",
+    "id": "com.yumejournal.figmasimucast",
     "api": "1.0.0",
     "main": "dist/code.js",
     "ui": "ui.html",

@@ -27,7 +27,7 @@ figma.ui.onmessage = async (msg) => {
 function createOrUpdateFrame() {
     if (!frame) {
         frame = figma.createFrame();
-        frame.name = "Live Image Frame";
+        frame.name = "Figma SimuCast";
         frame.resize(375, 812); // new default dimensions
         figma.currentPage.appendChild(frame);
     }
@@ -37,11 +37,6 @@ function createOrUpdateFrame() {
         rectangle.resize(frame.width, frame.height);
         frame.appendChild(rectangle);
     }
-    // Set an initial fill (so it doesn't start as white)
-    /*rectangle.fills = [{
-      type: "SOLID",
-      color: { r: 0.9, g: 0.9, b: 0.9 }
-    }];*/
     rectangle.fills = [];
 }
 async function fetchAndUpdate() {
@@ -99,13 +94,13 @@ function startUpdatingImage() {
     if (timer !== null)
         return; // already running
     timer = setInterval(fetchAndUpdate, updateInterval);
-    figma.notify("Live image updating started.");
+    figma.notify("Figma SimuCast updating started.");
 }
 function stopUpdatingImage() {
     if (timer !== null) {
         clearInterval(timer);
         timer = null;
-        figma.notify("Live image updating stopped.");
+        figma.notify("Figma SimuCast updating stopped.");
     }
 }
 figma.showUI(__html__, { width: 300, height: 250 });

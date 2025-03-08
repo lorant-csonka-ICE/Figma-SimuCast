@@ -211,7 +211,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     // MARK: - Monitoring & Capture
     
     func startMonitoring() {
-        guard let sim = selectedSimulator else {
+        guard selectedSimulator != nil else {
             print("No simulator selected.")
             return
         }

@@ -27,7 +27,7 @@ figma.ui.onmessage = async msg => {
 function createOrUpdateFrame() {
   if (!frame) {
     frame = figma.createFrame();
-    frame.name = "Live Image Frame";
+    frame.name = "Figma SimuCast";
     frame.resize(375, 812); // new default dimensions
     figma.currentPage.appendChild(frame);
   }
@@ -96,14 +96,14 @@ async function fetchAndUpdate() {
 function startUpdatingImage() {
   if (timer !== null) return; // already running
   timer = setInterval(fetchAndUpdate, updateInterval);
-  figma.notify("Live image updating started.");
+  figma.notify("Figma SimuCast updating started.");
 }
 
 function stopUpdatingImage() {
   if (timer !== null) {
     clearInterval(timer);
     timer = null;
-    figma.notify("Live image updating stopped.");
+    figma.notify("Figma SimuCast updating stopped.");
   }
 }
 
